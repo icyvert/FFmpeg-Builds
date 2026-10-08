@@ -3,22 +3,22 @@ name: Build FFmpeg
 on:
   push:
     paths-ignore:
-      - '**.md'
-      - 'LICENSE'
+      - "**.md"
+      - "LICENSE"
   workflow_dispatch:
     inputs:
       doRelease:
-        description: 'Publish new release'
+        description: "Publish new release"
         type: boolean
         default: false
         required: false
       buildOnly:
-        description: 'Only build ffmpeg'
+        description: "Only build ffmpeg"
         type: boolean
         default: false
         required: false
   schedule:
-    - cron: '0 0 12 * *'
+    - cron: "0 0 12 * *"
 
 env:
   DOCKER_BUILDKIT: 1
@@ -54,7 +54,7 @@ jobs:
       matrix:
         include:
           - runner: ubuntu-latest
-            tag_suffix: ''
+            tag_suffix: ""
           - runner: ubuntu-24.04-arm
             tag_suffix: -arm
     runs-on: ${{ matrix.runner }}
@@ -138,7 +138,7 @@ jobs:
       fail-fast: false
       matrix:
         runner: [ubuntu-latest]
-        target: [win64,linux64]
+        target: [win64, linux64]
     steps:
       - name: Free Disk-Space
         run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
@@ -196,7 +196,7 @@ jobs:
       fail-fast: false
       matrix:
         runner: [ubuntu-latest]
-        target: [win64,linux64]
+        target: [win64, linux64]
         variant: [nonfree]
     steps:
       - name: Free Disk-Space
@@ -262,7 +262,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [win64,linux64]
+        target: [win64, linux64]
         variant: [nonfree]
     steps:
       - name: Free Disk-Space
