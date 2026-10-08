@@ -3,22 +3,22 @@ name: Build FFmpeg
 on:
   push:
     paths-ignore:
-      - "**.md"
-      - "LICENSE"
+      - '**.md'
+      - 'LICENSE'
   workflow_dispatch:
     inputs:
       doRelease:
-        description: "Publish new release"
+        description: 'Publish new release'
         type: boolean
         default: false
         required: false
       buildOnly:
-        description: "Only build ffmpeg"
+        description: 'Only build ffmpeg'
         type: boolean
         default: false
         required: false
   schedule:
-    - cron: "0 0 12 * *"
+    - cron: '0 0 12 * *'
 
 env:
   DOCKER_BUILDKIT: 1
@@ -27,7 +27,7 @@ jobs:
   pre_check:
     name: Pre Checks
     if: ${{ github.event.inputs.buildOnly != 'true' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - name: Repo Check
         if: ${{ github.event_name == 'schedule' }}
@@ -54,15 +54,15 @@ jobs:
       matrix:
         include:
           - runner: ubuntu-latest
-            tag_suffix: ""
-          - runner: ubuntu-24.04-arm
+            tag_suffix: ''
+          - runner: ubuntu-26.04-arm
             tag_suffix: -arm
     runs-on: ${{ matrix.runner }}
     steps:
-      - name: Free Disk-Space
-        run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
       - name: Checkout
         uses: actions/checkout@v7
+      - name: Free Disk-Space
+        run: ./util/free_disk_space.sh
       - name: Install buildx
         uses: docker/setup-buildx-action@v4
         with:
@@ -138,12 +138,12 @@ jobs:
       fail-fast: false
       matrix:
         runner: [ubuntu-latest]
-        target: [win64, linux64]
+        target: [win64,linux64]
     steps:
-      - name: Free Disk-Space
-        run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
       - name: Checkout
         uses: actions/checkout@v7
+      - name: Free Disk-Space
+        run: ./util/free_disk_space.sh
       - name: Install buildx
         uses: docker/setup-buildx-action@v4
         with:
@@ -196,13 +196,13 @@ jobs:
       fail-fast: false
       matrix:
         runner: [ubuntu-latest]
-        target: [win64, linux64]
+        target: [win64,linux64]
         variant: [nonfree]
     steps:
-      - name: Free Disk-Space
-        run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
       - name: Checkout
         uses: actions/checkout@v7
+      - name: Free Disk-Space
+        run: ./util/free_disk_space.sh
       - name: Install buildx
         uses: docker/setup-buildx-action@v4
         with:
@@ -262,13 +262,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [win64, linux64]
+        target: [win64,linux64]
         variant: [nonfree]
     steps:
-      - name: Free Disk-Space
-        run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
       - name: Checkout
         uses: actions/checkout@v7
+      - name: Free Disk-Space
+        run: ./util/free_disk_space.sh
       - name: Login to Docker
         uses: docker/login-action@v4
         with:
@@ -298,10 +298,10 @@ jobs:
     steps:
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y libarchive-tools p7zip-full
-      - name: Free Disk-Space
-        run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
       - name: Checkout
         uses: actions/checkout@v7
+      - name: Free Disk-Space
+        run: ./util/free_disk_space.sh
       - name: Download artifacts
         uses: actions/download-artifact@v8
         with:
